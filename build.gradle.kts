@@ -83,7 +83,11 @@ val verifyDistribution = tasks.register("verifyDistribution") {
                 "plugin.yml",
                 "com/plexon/gpflags/PlexonGPFlags.class",
                 "com/plexon/gpflags/api/PlexonGPFlagsAPI.class",
-                "com/plexon/gpflags/event/PlexonGPFlagChangedEvent.class"
+                "com/plexon/gpflags/event/PlexonGPFlagChangedEvent.class",
+                "com/plexon/gpflags/compat/LegacyClaimFlagsBridge.class",
+                "net/plexon/claimflags/api/PlexonClaimFlagsAPI.class",
+                "net/plexon/claimflags/api/FlagChangeResult.class",
+                "net/plexon/claimflags/event/PlexonClaimFlagChangedEvent.class"
             ).forEach { entry -> require(zip.getEntry(entry) != null) { "Missing JAR entry: $entry" } }
             val pluginYml = zip.getInputStream(zip.getEntry("plugin.yml")).bufferedReader().readText()
             require(pluginYml.contains("name: PlexonGPFlags"))
