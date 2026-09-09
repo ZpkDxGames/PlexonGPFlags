@@ -5,11 +5,12 @@ plugins {
 }
 
 group = "com.plexon"
-version = "1.0.0"
+version = "1.0.1"
 
 val pluginVersion = version.toString()
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://api.modrinth.com/maven")
@@ -17,11 +18,12 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.2.build.121-stable")
-    // GriefPrevention 16.18.7-compatible artifact used by the previous Plexon addon.
     compileOnly("maven.modrinth:O4o4mKaq:dGfCZHqk")
+    compileOnly("com.zpkdxgames:PlexonCore:2.0.4")
 
     testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("com.zpkdxgames:PlexonCore:2.0.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -85,13 +87,17 @@ val verifyDistribution = tasks.register("verifyDistribution") {
                 "com/plexon/gpflags/api/PlexonGPFlagsAPI.class",
                 "com/plexon/gpflags/event/PlexonGPFlagChangedEvent.class",
                 "com/plexon/gpflags/compat/LegacyClaimFlagsBridge.class",
+                "com/plexon/gpflags/integration/core/CoreBridge.class",
                 "net/plexon/claimflags/api/PlexonClaimFlagsAPI.class",
                 "net/plexon/claimflags/api/FlagChangeResult.class",
                 "net/plexon/claimflags/event/PlexonClaimFlagChangedEvent.class"
             ).forEach { entry -> require(zip.getEntry(entry) != null) { "Missing JAR entry: $entry" } }
+            require(zip.entries().asSequence().none { it.name.startsWith("com/zpkdxgames/plexoncore/") }) {
+                "PlexonCore runtime classes must remain compile-only"
+            }
             val pluginYml = zip.getInputStream(zip.getEntry("plugin.yml")).bufferedReader().readText()
             require(pluginYml.contains("name: PlexonGPFlags"))
-            require(pluginYml.contains("version: 1.0.0"))
+            require(pluginYml.contains("version: 1.0.1"))
             require(pluginYml.contains("GriefPrevention"))
         }
     }
