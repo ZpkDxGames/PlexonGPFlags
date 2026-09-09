@@ -1,0 +1,45 @@
+name: PlexonGPFlags
+version: ${version}
+main: com.plexon.gpflags.PlexonGPFlags
+api-version: '26.2'
+author: ZpkDxGames
+description: Unified GriefPrevention claim GUI and high-performance per-claim flags for PlexonCraft.
+depend: [GriefPrevention]
+softdepend: [PlexonCore]
+
+commands:
+  gpflags:
+    description: Open and manage the PlexonGPFlags claim control panel.
+    usage: /gpflags [claim|claims|flags|set|reload|diagnostics]
+    aliases: [claimsflags, claimflags, cf, claimhelp]
+    permission: plexongpflags.use
+  gpegui-reload:
+    description: Compatibility reload command for former GriefPreventionEasyGUI users.
+    usage: /gpegui-reload
+    permission: plexongpflags.admin
+
+permissions:
+  plexongpflags.use:
+    default: true
+    description: Use the claim GUI and manage owned claims.
+  plexongpflags.admin:
+    default: op
+    description: Manage any player claim and administrative plugin commands.
+  plexongpflags.adminclaims:
+    default: op
+    description: Manage GriefPrevention administrative claims.
+  plexongpflags.bypass:
+    default: op
+    description: Bypass player-targeted PlexonGPFlags restrictions.
+  plexonclaimflags.use:
+    default: false
+    description: Legacy PlexonClaimFlags permission accepted for migration compatibility.
+  plexonclaimflags.admin:
+    default: false
+    description: Legacy PlexonClaimFlags admin permission.
+  plexonclaimflags.adminclaims:
+    default: false
+    description: Legacy PlexonClaimFlags admin-claim permission.
+  plexonclaimflags.bypass:
+    default: false
+    description: Legacy PlexonClaimFlags bypass permission.
