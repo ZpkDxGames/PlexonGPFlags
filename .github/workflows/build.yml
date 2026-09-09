@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 'release/**'
+      - 'agent/**'
   pull_request:
     branches:
       - main
@@ -14,7 +15,7 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -27,18 +28,34 @@ jobs:
           java-version: '25'
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
         with:
           gradle-version: '9.1.0'
 
+      - name: Provision exact PlexonCore 2.0.4
+        shell: bash
+        run: |
+          curl -fsSL -o /tmp/PlexonCore-2.0.4.jar https://github.com/ZpkDxGames/PlexonCore/releases/download/v2.0.4/PlexonCore-2.0.4.jar
+          echo '61d625a717da9f46ee9231e1970d84b4c317ae12cf4090cdf7c9d39b6a1a9baf  /tmp/PlexonCore-2.0.4.jar' | sha256sum --check
+          mvn -B install:install-file -Dfile=/tmp/PlexonCore-2.0.4.jar -DgroupId=com.zpkdxgames -DartifactId=PlexonCore -Dversion=2.0.4 -Dpackaging=jar -DgeneratePom=true
+
       - name: Verify
         run: gradle clean check --stacktrace
+
+      - name: Generate checksum
+        run: |
+          cd build/libs
+          sha256sum PlexonGPFlags-1.0.1.jar > ../../SHA256SUMS.txt
+          cd ../..
+          grep 'PlexonGPFlags-1.0.1.jar' SHA256SUMS.txt
 
       - name: Upload plugin JAR
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: PlexonGPFlags-${{ github.sha }}
-          path: build/libs/PlexonGPFlags-1.0.0.jar
+          name: PlexonGPFlags-1.0.1-${{ github.sha }}
+          path: |
+            build/libs/PlexonGPFlags-1.0.1.jar
+            SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 14
