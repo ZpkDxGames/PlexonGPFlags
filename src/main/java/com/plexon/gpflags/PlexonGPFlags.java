@@ -4,6 +4,7 @@ import com.plexon.gpflags.api.PlexonGPFlagsAPI;
 import com.plexon.gpflags.api.PlexonGPFlagsApiImpl;
 import com.plexon.gpflags.claim.ClaimService;
 import com.plexon.gpflags.command.PlexonGPFlagsCommand;
+import com.plexon.gpflags.compat.LegacyClaimFlagsBridge;
 import com.plexon.gpflags.config.RuntimeSettings;
 import com.plexon.gpflags.flag.FlagService;
 import com.plexon.gpflags.flag.FlagStore;
@@ -36,7 +37,9 @@ public final class PlexonGPFlags extends JavaPlugin implements Listener {
     private VisualizerService visualizer;
     private MenuService menus;
     private PlexonGPFlagsAPI api;
+    private LegacyClaimFlagsBridge legacyApi;
     private boolean apiRegistered;
+    private boolean legacyApiRegistered;
 
     @Override
     public void onEnable() {
@@ -68,6 +71,13 @@ public final class PlexonGPFlags extends JavaPlugin implements Listener {
             api = new PlexonGPFlagsApiImpl(claims, store, flags);
             getServer().getServicesManager().register(PlexonGPFlagsAPI.class, api, this, ServicePriority.Normal);
             apiRegistered = true;
+
+            legacyApi = new LegacyClaimFlagsBridge(this, claims, store, flags);
+            getServer().getServicesManager().register(net.plexon.claimflags.api.PlexonClaimFlagsAPI.class,
+                    legacyApi, this, ServicePriority.Normal);
+            getServer().getPluginManager().registerEvents(legacyApi, this);
+            legacyApiRegistered = true;
+
             getLogger().info("PlexonGPFlags " + getPluginMeta().getVersion() + " enabled. Core mode: " + coreMode());
         } catch (RuntimeException | LinkageError error) {
             getLogger().log(Level.SEVERE, "PlexonGPFlags failed to initialize safely.", error);
@@ -84,6 +94,7 @@ public final class PlexonGPFlags extends JavaPlugin implements Listener {
         if (store != null) store.save();
         getServer().getServicesManager().unregisterAll(this);
         apiRegistered = false;
+        legacyApiRegistered = false;
     }
 
     @EventHandler
@@ -122,4 +133,5 @@ public final class PlexonGPFlags extends JavaPlugin implements Listener {
     public Messages messages() { return messages; }
     public TeleportService teleports() { return teleports; }
     public boolean publicApiRegistered() { return apiRegistered; }
+    public boolean legacyApiRegistered() { return legacyApiRegistered; }
 }
