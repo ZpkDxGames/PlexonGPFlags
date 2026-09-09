@@ -50,6 +50,7 @@ public final class TeleportService implements Listener {
     }
 
     public boolean pending(UUID playerId) { return pending.containsKey(playerId); }
+    public int pendingCount() { return pending.size(); }
 
     public void cancel(UUID playerId, boolean notify) {
         if (pending.remove(playerId) == null) return;
