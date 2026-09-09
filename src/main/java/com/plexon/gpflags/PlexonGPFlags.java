@@ -9,6 +9,8 @@ import com.plexon.gpflags.config.RuntimeSettings;
 import com.plexon.gpflags.flag.FlagService;
 import com.plexon.gpflags.flag.FlagStore;
 import com.plexon.gpflags.gui.MenuService;
+import com.plexon.gpflags.integration.core.CoreBridge;
+import com.plexon.gpflags.integration.core.CoreBridgeFactory;
 import com.plexon.gpflags.protection.ProtectionListener;
 import com.plexon.gpflags.service.ClaimActionService;
 import com.plexon.gpflags.service.PromptService;
@@ -38,11 +40,14 @@ public final class PlexonGPFlags extends JavaPlugin implements Listener {
     private MenuService menus;
     private PlexonGPFlagsAPI api;
     private LegacyClaimFlagsBridge legacyApi;
+    private CoreBridge coreBridge;
     private boolean apiRegistered;
     private boolean legacyApiRegistered;
 
     @Override
     public void onEnable() {
+        coreBridge = CoreBridgeFactory.resolve(this);
+        coreBridge.registerStarting();
         try {
             saveDefaultConfig();
             settings = RuntimeSettings.load(getConfig(), getLogger());
@@ -78,8 +83,10 @@ public final class PlexonGPFlags extends JavaPlugin implements Listener {
             getServer().getPluginManager().registerEvents(legacyApi, this);
             legacyApiRegistered = true;
 
+            coreBridge.markReady("GriefPrevention claim flags, migration bridge, APIs and persistence ready");
             getLogger().info("PlexonGPFlags " + getPluginMeta().getVersion() + " enabled. Core mode: " + coreMode());
         } catch (RuntimeException | LinkageError error) {
+            if (coreBridge != null) coreBridge.markFailed("Startup failed: " + error.getClass().getSimpleName());
             getLogger().log(Level.SEVERE, "PlexonGPFlags failed to initialize safely.", error);
             getServer().getPluginManager().disablePlugin(this);
         }
@@ -93,6 +100,7 @@ public final class PlexonGPFlags extends JavaPlugin implements Listener {
         if (visualizer != null) visualizer.cancelAll();
         if (store != null) store.save();
         getServer().getServicesManager().unregisterAll(this);
+        if (coreBridge != null) coreBridge.unregister();
         apiRegistered = false;
         legacyApiRegistered = false;
     }
@@ -124,9 +132,7 @@ public final class PlexonGPFlags extends JavaPlugin implements Listener {
     }
 
     public String coreMode() {
-        var core = getServer().getPluginManager().getPlugin("PlexonCore");
-        if (core == null) return "STANDALONE";
-        return core.isEnabled() ? "CORE_DETECTED" : "CORE_DISABLED";
+        return coreBridge == null ? "STANDALONE" : coreBridge.mode();
     }
 
     public RuntimeSettings settings() { return settings; }
