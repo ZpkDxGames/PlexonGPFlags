@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/** Bounded selected-claim visualizer; intentionally never scans GriefPrevention#getClaims(). */
+/** Bounded selected-claim visualizer; it renders only the explicitly selected claim. */
 public final class VisualizerService implements Listener {
     private static final Particle.DustOptions CORNER = new Particle.DustOptions(Color.fromRGB(255, 180, 40), 1.2F);
     private static final Particle.DustOptions EDGE = new Particle.DustOptions(Color.fromRGB(65, 201, 2), 0.8F);
