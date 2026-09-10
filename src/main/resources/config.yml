@@ -1,5 +1,5 @@
-# PlexonGPFlags 1.0.0
-# MiniMessage is used for player-facing text.
+# PlexonGPFlags 1.1.0-rc.1
+schema-version: 2
 
 features:
   onboarding: true
@@ -14,73 +14,19 @@ features:
   abandon: true
 
 claims:
-  auto-claim-sizes:
-    small: 10
-    medium: 20
-    large: 30
+  auto-claim-sizes: {small: 10, medium: 20, large: 30}
   shovel-cooldown-seconds: 3600
   prompt-timeout-seconds: 60
-  teleport:
-    warmup-seconds: 3
-    cancel-on-movement: true
-    cancel-on-damage: true
-  visualizer:
-    duration-seconds: 8
-    interval-ticks: 10
-    max-particles-per-update: 260
-    edge-spacing: 2
-    wall-height: 2
+  teleport: {warmup-seconds: 3, cancel-on-movement: true, cancel-on-damage: true}
+  visualizer: {duration-seconds: 8, interval-ticks: 10, max-particles-per-update: 260, edge-spacing: 2, wall-height: 2}
 
 flags:
   subclaims-inherit-parent: true
   natural-spawn-reasons: [NATURAL, CHUNK_GEN]
   spawner-spawn-reasons: [SPAWNER]
-  interaction-materials:
-    - CRAFTING_TABLE
-    - FURNACE
-    - BLAST_FURNACE
-    - SMOKER
-    - STONECUTTER
-    - LOOM
-    - CARTOGRAPHY_TABLE
-    - SMITHING_TABLE
-    - GRINDSTONE
-    - ANVIL
-    - CHIPPED_ANVIL
-    - DAMAGED_ANVIL
-    - ENCHANTING_TABLE
-    - BREWING_STAND
-    - LECTERN
-    - COMPOSTER
-    - LEVER
-    - BEACON
-    - CRAFTER
+  interaction-materials: [CRAFTING_TABLE, FURNACE, BLAST_FURNACE, SMOKER, STONECUTTER, LOOM, CARTOGRAPHY_TABLE, SMITHING_TABLE, GRINDSTONE, ANVIL, CHIPPED_ANVIL, DAMAGED_ANVIL, ENCHANTING_TABLE, BREWING_STAND, LECTERN, COMPOSTER, LEVER, BEACON, CRAFTER]
   interaction-material-suffixes: [_DOOR, _BUTTON, _PRESSURE_PLATE, _TRAPDOOR, _FENCE_GATE]
-  container-materials:
-    - CHEST
-    - TRAPPED_CHEST
-    - BARREL
-    - ENDER_CHEST
-    - HOPPER
-    - DISPENSER
-    - DROPPER
-    - SHULKER_BOX
-    - WHITE_SHULKER_BOX
-    - ORANGE_SHULKER_BOX
-    - MAGENTA_SHULKER_BOX
-    - LIGHT_BLUE_SHULKER_BOX
-    - YELLOW_SHULKER_BOX
-    - LIME_SHULKER_BOX
-    - PINK_SHULKER_BOX
-    - GRAY_SHULKER_BOX
-    - LIGHT_GRAY_SHULKER_BOX
-    - CYAN_SHULKER_BOX
-    - PURPLE_SHULKER_BOX
-    - BLUE_SHULKER_BOX
-    - BROWN_SHULKER_BOX
-    - GREEN_SHULKER_BOX
-    - RED_SHULKER_BOX
-    - BLACK_SHULKER_BOX
+  container-materials: [CHEST, TRAPPED_CHEST, BARREL, ENDER_CHEST, HOPPER, DISPENSER, DROPPER, SHULKER_BOX, WHITE_SHULKER_BOX, ORANGE_SHULKER_BOX, MAGENTA_SHULKER_BOX, LIGHT_BLUE_SHULKER_BOX, YELLOW_SHULKER_BOX, LIME_SHULKER_BOX, PINK_SHULKER_BOX, GRAY_SHULKER_BOX, LIGHT_GRAY_SHULKER_BOX, CYAN_SHULKER_BOX, PURPLE_SHULKER_BOX, BLUE_SHULKER_BOX, BROWN_SHULKER_BOX, GREEN_SHULKER_BOX, RED_SHULKER_BOX, BLACK_SHULKER_BOX]
 
 defaults:
   natural-mobs: false
@@ -93,6 +39,9 @@ defaults:
   fire: false
   crop-trampling: false
   mob-griefing: false
+
+# Sparse world overrides are keyed by Bukkit world UUID; omitted flags fall back to global defaults.
+world-defaults: {}
 
 gui:
   filler: BLACK_STAINED_GLASS_PANE
