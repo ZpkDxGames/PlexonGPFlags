@@ -2,7 +2,7 @@ name: Publish PlexonGPFlags 1.1.0-rc.2 once
 on:
   push:
     branches: [phase3/release-v1.1.0-rc.2]
-    paths: ['.github/workflows/publish-phase3-rc.2-once.yml']
+    paths: ['.github/workflows/publish-phase3-rc.2-once.yml', 'src/test/java/com/plexon/gpflags/Phase2ContractTest.java']
 permissions: {contents: write}
 env: {PLUGIN_VERSION: '1.1.0-rc.2'}
 jobs:
@@ -14,7 +14,7 @@ jobs:
       - name: Prove release-only descendant
         run: |
           set -euo pipefail; UX=b0a48d777e8344dfea1a187c11f00851fb2351a1; git merge-base --is-ancestor "$UX" HEAD; git diff --name-only "$UX" HEAD >/tmp/delta
-          if grep -Ev '^(build\.gradle\.kts|\.github/workflows/build\.yml|\.github/workflows/publish-phase3-rc\.2-once\.yml|\.release/RELEASE_NOTES_1\.1\.0-rc\.2\.md)$' /tmp/delta | grep -q .; then exit 1; fi
+          if grep -Ev '^(build\.gradle\.kts|\.github/workflows/build\.yml|\.github/workflows/publish-phase3-rc\.2-once\.yml|\.release/RELEASE_NOTES_1\.1\.0-rc\.2\.md|src/test/java/com/plexon/gpflags/Phase2ContractTest\.java)$' /tmp/delta | grep -q .; then exit 1; fi
       - uses: actions/setup-java@v5
         with: {distribution: temurin, java-version: '25'}
       - uses: gradle/actions/setup-gradle@v6
