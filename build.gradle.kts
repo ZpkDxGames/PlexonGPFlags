@@ -3,7 +3,7 @@ import java.util.zip.ZipFile
 plugins { java }
 
 group = "com.plexon"
-version = "1.1.0-rc.1"
+version = "1.1.0-rc.2"
 val pluginVersion = version.toString()
 
 repositories { mavenLocal(); mavenCentral(); maven("https://repo.papermc.io/repository/maven-public/"); maven("https://api.modrinth.com/maven") }
