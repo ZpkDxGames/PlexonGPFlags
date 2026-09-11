@@ -119,7 +119,7 @@ jobs:
         with:
           name: PlexonGPFlags-release-${{ github.sha }}
           path: |
-            build/libs/PlexonGPFlags-${{ env.VERSION }}.jar
+            build/libs/PlexonGPFlags-*.jar
             SHA256SUMS.txt
             TEST_SUMMARY.txt
             PROVENANCE.txt
