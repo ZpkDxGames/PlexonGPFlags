@@ -42,7 +42,7 @@ public final class ProtectionListener implements Listener {
         Claim victimClaim = claims.at(victim.getLocation()); Claim attackerClaim = claims.at(attacker.getLocation());
         boolean victimBlocked = victimClaim != null && blocked(victimClaim, ClaimFlag.PVP); boolean attackerBlocked = attackerClaim != null && blocked(attackerClaim, ClaimFlag.PVP);
         boolean victimBypass = victimBlocked && claims.bypassesPlayerRestriction(attacker, victimClaim); boolean attackerBypass = attackerBlocked && claims.bypassesPlayerRestriction(attacker, attackerClaim);
-        if (!shouldDenyPvp(victimBlocked, victimBypass, attackerBlocked, attackerBypass)) return; event.setCancelled(true); denials.increment(); warn(attacker);
+        if (!PvpPolicy.shouldDeny(victimBlocked, victimBypass, attackerBlocked, attackerBypass)) return; event.setCancelled(true); denials.increment(); warn(attacker);
     }
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) public void onBreak(BlockBreakEvent event) { Claim claim = claims.at(event.getBlock().getLocation()); if (claim == null || !blocked(claim, ClaimFlag.BUILDING) || claims.bypassesPlayerRestriction(event.getPlayer(), claim)) return; event.setCancelled(true); denials.increment(); warn(event.getPlayer()); }
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) public void onPlace(BlockPlaceEvent event) { Claim claim = claims.at(event.getBlockPlaced().getLocation()); if (claim == null || !blocked(claim, ClaimFlag.BUILDING) || claims.bypassesPlayerRestriction(event.getPlayer(), claim)) return; event.setCancelled(true); denials.increment(); warn(event.getPlayer()); }
@@ -63,7 +63,6 @@ public final class ProtectionListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true) public void onDeleted(ClaimDeletedEvent event) { store.removeClaimTree(event.getClaim()); }
     @EventHandler public void onQuit(PlayerQuitEvent event) { warningCooldown.remove(event.getPlayer().getUniqueId()); }
     public long decisionCount() { return decisions.sum(); } public long denialCount() { return denials.sum(); }
-    static boolean shouldDenyPvp(boolean victimBlocked, boolean victimBypass, boolean attackerBlocked, boolean attackerBypass) { return victimBlocked && !victimBypass || attackerBlocked && !attackerBypass; }
     private boolean blocked(Claim claim, ClaimFlag flag) { decisions.increment(); return store.effective(claim, flag); }
     private boolean enabled(Location location, ClaimFlag flag) { Claim claim = claims.at(location); return claim != null && blocked(claim, flag); }
     private void addDenied(int count) { if (count > 0) denials.add(count); }
