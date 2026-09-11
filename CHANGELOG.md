@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.1 — Stable release verification patch
+
+- Preserves the complete `1.1.0` gameplay/runtime source line, including the cross-claim PvP correctness fix.
+- Changes stable release checksum generation to store the JAR basename rather than a build-directory path.
+- Makes post-publication verification work directly against assets downloaded from GitHub Releases.
+- Keeps exact-current-`main` publication, full tests/Javadocs/distribution validation, SHA-256 evidence and provenance requirements unchanged.
+
 ## 1.1.0 — Stable
 
 ### Player UX and policy management
