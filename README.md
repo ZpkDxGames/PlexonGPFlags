@@ -1,6 +1,8 @@
 # PlexonGPFlags
 
-**PlexonGPFlags 1.1.0** is the stable GriefPrevention claim-policy and player-management companion for PlexonCraft. GriefPrevention remains authoritative for claim identity, boundaries, ownership, trust and claim persistence; PlexonGPFlags owns Plexon flag policy, editing UX, diagnostics and compatible sparse flag persistence.
+**PlexonGPFlags 1.1.1** is the stable GriefPrevention claim-policy and player-management companion for PlexonCraft. GriefPrevention remains authoritative for claim identity, boundaries, ownership, trust and claim persistence; PlexonGPFlags owns Plexon flag policy, editing UX, diagnostics and compatible sparse flag persistence.
+
+`1.1.1` contains the same accepted gameplay line as `1.1.0`; the patch corrects stable-release checksum generation so the downloaded GitHub release verifies from its own directory without path rewriting.
 
 Repository/source/release closure is independent from live PlexonCraft rollout. Runtime certification may still be recorded as `NOT_EXECUTED`; that is deployment evidence, not a blocker for the verified GitHub stable artifact.
 
@@ -110,6 +112,6 @@ With JDK 25 and Gradle 9.1.0, provision the pinned PlexonCore 2.0.4 API artifact
 gradle clean check javadoc
 ```
 
-Stable output: `build/libs/PlexonGPFlags-1.1.0.jar`.
+Stable output: `build/libs/PlexonGPFlags-1.1.1.jar`.
 
-GitHub CI verifies accepted Phase 3 ancestry, all tests with zero failures/errors/skips, Java class major 69, Paper 26.2 metadata, hot-path restrictions, required public compatibility classes, dependency isolation, SHA-256 integrity and provenance. The stable publisher accepts only the exact current `main` commit and rebuilds the artifact before publishing `v1.1.0`.
+GitHub CI verifies accepted Phase 3 ancestry, all tests with zero failures/errors/skips, Java class major 69, Paper 26.2 metadata, hot-path restrictions, required public compatibility classes, dependency isolation, SHA-256 integrity and provenance. The stable publisher accepts only the exact current `main` commit, rebuilds the artifact, publishes `v1.1.1`, downloads the published assets, and verifies their checksum and provenance from the release directory.
