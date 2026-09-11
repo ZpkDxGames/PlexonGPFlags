@@ -59,9 +59,9 @@ jobs:
           size=$(stat -c%s "$JAR"); digest=$(sha256sum "$JAR"|awk '{print $1}'); { echo repository=$GITHUB_REPOSITORY; echo commit=$GITHUB_SHA; echo accepted_phase3=$ACCEPTED_PHASE3_SHA; echo version=$PLUGIN_VERSION; echo java_major=69; echo paper=26.2.build.121-stable; echo griefprevention=external_authority; echo plexoncore=2.0.4_external; echo schema=2_unchanged; echo jar_size=$size; echo jar_sha256=$digest; echo runtime_certification=NOT_EXECUTED; } > PROVENANCE.txt
       - uses: actions/upload-artifact@v7
         with:
-          name: PlexonGPFlags-${{ env.PLUGIN_VERSION }}-${{ github.sha }}
+          name: PlexonGPFlags-${{ github.sha }}
           path: |
-            build/libs/PlexonGPFlags-${{ env.PLUGIN_VERSION }}.jar
+            build/libs/PlexonGPFlags-*.jar
             SHA256SUMS.txt
             TEST_SUMMARY.txt
             PROVENANCE.txt
