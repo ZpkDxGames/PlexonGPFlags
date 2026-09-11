@@ -1,8 +1,10 @@
 # PlexonGPFlags 1.1.0 — PlexonCraft runtime certification matrix
 
-Candidate runtime state: **NOT EXECUTED**.
+Current deployment evidence state: **NOT EXECUTED**.
 
-Stable promotion is blocked until every applicable gate below passes against the exact immutable RC JAR.
+This matrix is an operational follow-up for validating the stable `v1.1.0` artifact on PlexonCraft. Repository/source/release closure is established independently by GitHub CI and the exact-`main` stable publication workflow; this checklist does not block the verified stable release.
+
+Execute the following against the exact published stable JAR:
 
 - representative v1.0.1 upgrade and existing override preservation
 - legacy PlexonClaimFlags data import rehearsal, backup, marker and idempotency
@@ -12,6 +14,7 @@ Stable promotion is blocked until every applicable gate below passes against the
 - owner claim editor and each GriefPrevention trust level
 - unauthorized, admin and admin-claim authorization behavior
 - explicit ON, explicit OFF and INHERIT resolution plus world/default precedence
+- cross-claim PvP where attacker/victim occupy different claims and bypass/ownership applies to only one side
 - claim creation, resize, deletion, ownership transfer and trust change
 - stale GUI after reload, claim deletion and authorization change
 - repeated successful reload with no listener multiplication
@@ -24,4 +27,4 @@ Stable promotion is blocked until every applicable gate below passes against the
 - at least 30 minutes soak
 - zero HIGH/CRITICAL defects
 
-Record exact server/Paper/Java/GP/Core versions, RC tag/SHA, JAR SHA-256, Spark evidence and any deviations when executing this matrix.
+Record exact server/Paper/Java/GP/Core versions, stable tag/SHA, JAR SHA-256, Spark evidence and any deviations when executing this matrix.

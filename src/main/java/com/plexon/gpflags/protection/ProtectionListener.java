@@ -39,8 +39,10 @@ public final class ProtectionListener implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) public void onPvp(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player victim)) return; Player attacker = attackingPlayer(event.getDamager()); if (attacker == null || attacker.getUniqueId().equals(victim.getUniqueId())) return;
-        Claim victimClaim = claims.at(victim.getLocation()); Claim attackerClaim = claims.at(attacker.getLocation()); boolean prevented = victimClaim != null && blocked(victimClaim, ClaimFlag.PVP) || attackerClaim != null && blocked(attackerClaim, ClaimFlag.PVP);
-        if (!prevented || claims.bypassesPlayerRestriction(attacker, victimClaim != null ? victimClaim : attackerClaim)) return; event.setCancelled(true); denials.increment(); warn(attacker);
+        Claim victimClaim = claims.at(victim.getLocation()); Claim attackerClaim = claims.at(attacker.getLocation());
+        boolean victimBlocked = victimClaim != null && blocked(victimClaim, ClaimFlag.PVP); boolean attackerBlocked = attackerClaim != null && blocked(attackerClaim, ClaimFlag.PVP);
+        boolean victimBypass = victimBlocked && claims.bypassesPlayerRestriction(attacker, victimClaim); boolean attackerBypass = attackerBlocked && claims.bypassesPlayerRestriction(attacker, attackerClaim);
+        if (!PvpPolicy.shouldDeny(victimBlocked, victimBypass, attackerBlocked, attackerBypass)) return; event.setCancelled(true); denials.increment(); warn(attacker);
     }
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) public void onBreak(BlockBreakEvent event) { Claim claim = claims.at(event.getBlock().getLocation()); if (claim == null || !blocked(claim, ClaimFlag.BUILDING) || claims.bypassesPlayerRestriction(event.getPlayer(), claim)) return; event.setCancelled(true); denials.increment(); warn(event.getPlayer()); }
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) public void onPlace(BlockPlaceEvent event) { Claim claim = claims.at(event.getBlockPlaced().getLocation()); if (claim == null || !blocked(claim, ClaimFlag.BUILDING) || claims.bypassesPlayerRestriction(event.getPlayer(), claim)) return; event.setCancelled(true); denials.increment(); warn(event.getPlayer()); }
