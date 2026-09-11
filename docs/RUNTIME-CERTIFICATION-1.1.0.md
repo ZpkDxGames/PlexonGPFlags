@@ -1,8 +1,8 @@
-# PlexonGPFlags 1.1.0 — PlexonCraft runtime certification matrix
+# PlexonGPFlags 1.1.x — PlexonCraft runtime certification matrix
 
 Current deployment evidence state: **NOT EXECUTED**.
 
-This matrix is an operational follow-up for validating the stable `v1.1.0` artifact on PlexonCraft. Repository/source/release closure is established independently by GitHub CI and the exact-`main` stable publication workflow; this checklist does not block the verified stable release.
+This matrix is an operational follow-up for validating the latest stable `v1.1.1` artifact on PlexonCraft. Repository/source/release closure is established independently by GitHub CI and the exact-`main` stable publication workflow; this checklist does not block the verified stable release.
 
 Execute the following against the exact published stable JAR:
 
