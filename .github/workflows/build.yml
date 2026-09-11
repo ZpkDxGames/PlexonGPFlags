@@ -6,7 +6,7 @@ on:
     branches: [main, 'phase2/**']
 permissions: {contents: read}
 env:
-  PLUGIN_VERSION: '1.1.0-rc.2'
+  PLUGIN_VERSION: '1.1.0-rc.3'
   ACCEPTED_PHASE3_SHA: 'b0a48d777e8344dfea1a187c11f00851fb2351a1'
 jobs:
   verify:
@@ -41,13 +41,13 @@ jobs:
           for p in glob.glob('build/test-results/test/*.xml'):
               r=ET.parse(p).getroot(); t+=int(r.attrib.get('tests',0)); f+=int(r.attrib.get('failures',0)); e+=int(r.attrib.get('errors',0)); s+=int(r.attrib.get('skipped',0))
           if not t or f or e or s: raise SystemExit(f'{t=} {f=} {e=} {s=}')
-          pathlib.Path('TEST_SUMMARY.txt').write_text(f'Tests: {t} executed / {f} failures / {e} errors / {s} skipped\ncandidate=1.1.0-rc.2\nruntime_certification=NOT_EXECUTED\n'); print(f'TEST_COUNT={t} FAILURES={f} ERRORS={e} SKIPPED={s}')
+          pathlib.Path('TEST_SUMMARY.txt').write_text(f'Tests: {t} executed / {f} failures / {e} errors / {s} skipped\ncandidate=1.1.0-rc.3\nruntime_certification=NOT_EXECUTED\n'); print(f'TEST_COUNT={t} FAILURES={f} ERRORS={e} SKIPPED={s}')
           PY
           JAR=build/libs/PlexonGPFlags-${PLUGIN_VERSION}.jar; test -s "$JAR"; jar tf "$JAR" > /tmp/jar.txt
           unzip -p "$JAR" plugin.yml | grep -F "version: ${PLUGIN_VERSION}"; unzip -p "$JAR" plugin.yml | grep -F 'depend: [GriefPrevention]'
           javap -verbose -classpath "$JAR" com.plexon.gpflags.PlexonGPFlags | grep -F 'major version: 69'
           for p in 'com/zpkdxgames/plexoncore/' 'me/ryanhamshire/GriefPrevention/' 'org/bukkit/' 'io/papermc/' 'net/kyori/adventure/'; do if grep -q "^$p" /tmp/jar.txt; then exit 1; fi; done
-          sha256sum "$JAR" > SHA256SUMS.txt; (cd build/libs && cp ../../SHA256SUMS.txt . && sha256sum -c SHA256SUMS.txt)
+          sha256sum "$JAR" > SHA256SUMS.txt; sha256sum --check SHA256SUMS.txt
           size=$(stat -c%s "$JAR"); digest=$(sha256sum "$JAR"|awk '{print $1}'); { echo repository=$GITHUB_REPOSITORY; echo candidate_sha=$GITHUB_SHA; echo accepted_phase3=$ACCEPTED_PHASE3_SHA; echo version=$PLUGIN_VERSION; echo java_major=69; echo paper=26.2.build.121-stable; echo griefprevention=external_authority; echo plexoncore=external; echo schema=2_unchanged; echo jar_size=$size; echo jar_sha256=$digest; echo runtime_certification=NOT_EXECUTED; } > PROVENANCE.txt
       - uses: actions/upload-artifact@v4
         with:
