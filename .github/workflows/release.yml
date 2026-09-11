@@ -69,7 +69,8 @@ jobs:
           unzip -p "$JAR" plugin.yml | grep -F "version: ${VERSION}"; unzip -p "$JAR" plugin.yml | grep -F 'depend: [GriefPrevention]'
           javap -verbose -classpath "$JAR" com.plexon.gpflags.PlexonGPFlags | grep -F 'major version: 69'
           for p in 'com/zpkdxgames/plexoncore/' 'me/ryanhamshire/GriefPrevention/' 'org/bukkit/' 'io/papermc/' 'net/kyori/adventure/'; do if grep -q "^$p" /tmp/jar.txt; then echo "Unexpected bundled dependency: $p" >&2; exit 1; fi; done
-          sha256sum "$JAR" > SHA256SUMS.txt; sha256sum --check SHA256SUMS.txt
+          (cd build/libs && sha256sum "PlexonGPFlags-${VERSION}.jar") > SHA256SUMS.txt
+          (cd build/libs && sha256sum --check ../../SHA256SUMS.txt)
           size=$(stat -c%s "$JAR"); digest=$(sha256sum "$JAR"|awk '{print $1}'); cat > PROVENANCE.txt <<EOF
           repository=${GITHUB_REPOSITORY}
           commit=${GITHUB_SHA}
