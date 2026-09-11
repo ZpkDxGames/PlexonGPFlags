@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,10 +27,11 @@ public final class PromptService implements Listener {
     public PromptService(PlexonGPFlags plugin) { this.plugin = plugin; }
 
     public void start(Player player, String messageKey, Handler handler) {
-        long expires = System.nanoTime() + plugin.settings().claims().promptTimeoutSeconds() * 1_000_000_000L;
+        int timeout = plugin.settings().claims().promptTimeoutSeconds();
+        long expires = System.nanoTime() + timeout * 1_000_000_000L;
         pending.put(player.getUniqueId(), new Prompt(expires, handler));
         player.closeInventory();
-        plugin.messages().send(player, messageKey);
+        plugin.messages().send(player, messageKey, Map.of("seconds", Integer.toString(timeout)));
         ensureSweep();
     }
 
@@ -48,8 +50,12 @@ public final class PromptService implements Listener {
         Bukkit.getScheduler().runTask(plugin, () -> {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) return;
-            if (input.equalsIgnoreCase("cancel") || System.nanoTime() > prompt.expiresAtNanos()) {
+            if (input.equalsIgnoreCase("cancel")) {
                 plugin.messages().send(player, "prompt-cancelled");
+                return;
+            }
+            if (System.nanoTime() > prompt.expiresAtNanos()) {
+                plugin.messages().send(player, "prompt-expired");
                 return;
             }
             prompt.handler().accept(player, input);
@@ -62,7 +68,14 @@ public final class PromptService implements Listener {
         if (sweepTask != null) return;
         sweepTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             long now = System.nanoTime();
-            pending.entrySet().removeIf(entry -> entry.getValue().expiresAtNanos() <= now);
+            for (UUID uuid : List.copyOf(pending.keySet())) {
+                Prompt prompt = pending.get(uuid);
+                if (prompt == null || prompt.expiresAtNanos() > now) continue;
+                if (pending.remove(uuid, prompt)) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player != null) plugin.messages().send(player, "prompt-expired");
+                }
+            }
             if (pending.isEmpty() && sweepTask != null) {
                 sweepTask.cancel();
                 sweepTask = null;

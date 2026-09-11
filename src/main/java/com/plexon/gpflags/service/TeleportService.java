@@ -123,8 +123,9 @@ public final class TeleportService implements Listener {
             int y = Math.min(world.getMaxHeight() - 2, world.getHighestBlockYAt(x, z, HeightMap.MOTION_BLOCKING_NO_LEAVES) + 1);
             Location destination = new Location(world, x + 0.5D, y, z + 0.5D, player.getYaw(), player.getPitch());
             player.teleportAsync(destination).whenComplete((success, error) -> Bukkit.getScheduler().runTask(plugin, () -> {
-                if (error == null && Boolean.TRUE.equals(success)) plugin.messages().send(player, "teleport-success", Map.of("claim", Long.toString(claimId)));
-                else plugin.messages().send(player, "teleport-cancelled");
+                if (error == null && Boolean.TRUE.equals(success)) {
+                    plugin.messages().send(player, "teleport-success", Map.of("claim", claims.areaLabel(current)));
+                } else plugin.messages().send(player, "teleport-cancelled");
             }));
         }));
     }

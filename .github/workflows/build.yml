@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [main, 'release/**', 'agent/**', 'phase2/**']
+    branches: [main, 'release/**', 'agent/**', 'phase2/**', 'phase3/**']
   pull_request:
-    branches: [main]
+    branches: [main, 'phase2/**']
 
 permissions:
   contents: read

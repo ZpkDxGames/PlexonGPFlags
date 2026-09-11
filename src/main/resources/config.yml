@@ -46,12 +46,14 @@ world-defaults: {}
 gui:
   filler: BLACK_STAINED_GLASS_PANE
   titles:
-    hub: "<dark_gray>Plexon Claims"
+    hub: "<dark_gray>Claims Home"
     claims: "<dark_gray>My Claims <gray>• <white>%page%/%pages%"
-    dashboard: "<dark_gray>Claim <gray>• <white>#%claim%"
-    flags: "<dark_gray>Claim Flags <gray>• <white>#%claim%"
-    trust: "<dark_gray>Trusted Players <gray>• <white>#%claim%"
-    resize: "<dark_gray>Resize Claim <gray>• <white>%direction%"
+    dashboard: "<dark_gray>Claim Dashboard <gray>• <white>%claim%"
+    flags: "<dark_gray>Rules <gray>• <white>%claim%"
+    rule: "<dark_gray>Rule Details <gray>• <white>%rule%"
+    trust: "<dark_gray>Trusted Players <gray>• <white>%claim%"
+    trust-details: "<dark_gray>Trusted Player <gray>• <white>%player%"
+    resize: "<dark_gray>Resize <gray>• <white>%direction%"
     autoclaim: "<dark_gray>Create Claim"
     confirm: "<dark_red>Confirm Claim Removal"
 

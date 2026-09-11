@@ -55,11 +55,12 @@ public final class ClaimService {
         return owner != null && owner.equals(player.getUniqueId());
     }
 
+    /** Player-facing label only; numeric GriefPrevention IDs remain hidden routing state. */
     public String areaLabel(Claim claim) {
-        if (claim == null) return "Unknown";
-        if (claim.parent == null) return "Claim #" + safeId(claim);
+        if (claim == null) return "Claim";
+        if (claim.parent == null) return "Main Claim";
         int index = claim.parent.children.indexOf(claim);
-        return "Subclaim #" + (index < 0 ? "?" : index + 1) + " / Claim #" + safeId(claim.parent);
+        return index < 0 ? "Subdivision" : "Subdivision " + (index + 1);
     }
 
     public String boundsLabel(Claim claim) {
