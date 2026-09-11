@@ -37,10 +37,12 @@ class GPFlagsCertificationContractTest {
     }
 
     @Test
-    void oldFlagsMigrationIsOneWayAndDoesNotOverwriteCurrentStore() throws Exception {
+    void oldFlagsMigrationIsOneWayBackedUpAndDoesNotOverwriteCurrentStore() throws Exception {
         String store = Files.readString(Path.of("src/main/java/com/plexon/gpflags/flag/FlagStore.java"));
         assertTrue(store.contains("file.exists()) return"));
-        assertTrue(store.contains("Files.copy(legacy, file.toPath(), StandardCopyOption.COPY_ATTRIBUTES)"));
+        assertTrue(store.contains("Files.copy(legacy, backup"));
+        assertTrue(store.contains("Files.copy(legacy, file.toPath()"));
+        assertTrue(store.contains("legacy-import.complete"));
     }
 
     @Test

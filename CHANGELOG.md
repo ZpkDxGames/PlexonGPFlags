@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.1.0-rc.1 — Phase 2 candidate
+
+### Compatible policy hardening
+- Preserves GriefPrevention numeric claim identity, ten stable flag IDs, sparse claim overrides, public API signatures and ON/OFF/INHERIT semantics.
+- Adds strict configuration schema validation and sparse UUID-keyed world defaults.
+- Adds flag-store schema 2 with future-schema fail-closed behavior and unknown-ID quarantine.
+- Makes reload candidate-first and rollback-safe; successful reloads invalidate old GUI generations.
+- Adds actor/config-generation GUI session protection while retaining claim-ID and authorization revalidation.
+- Backs up and marks one-way legacy PlexonClaimFlags data import.
+- Refuses startup when the deprecated PlexonClaimFlags / GriefPreventionAddon plugin is active.
+- Adds bounded `/gpflags inspect` and expanded diagnostics/observability counters.
+- Normalizes owner/admin crop-trampling bypass with other player-targeted flag protections.
+- Expands Java 25, dependency non-shading, hot-path, provenance, checksum and prerelease CI gates.
+
+### Release state
+- Candidate only; runtime certification NOT EXECUTED.
+- Stable `v1.1.0` remains unpublished until the PlexonCraft runtime matrix passes.
+
 ## 1.0.0
 
 ### Unified product

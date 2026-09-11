@@ -1,0 +1,7 @@
+PlexonGPFlags 1.1.0-rc.1
+rollback_tag=v1.0.1
+rollback_sha=757f62fa52fdb6ffa718c57ab4515b60c5aa23f3
+pre_rc_source_ci=34530183051
+pre_rc_pr_ci=34530322375
+pr=3
+runtime_certification=NOT_EXECUTED

@@ -18,6 +18,7 @@ import java.util.UUID;
 /** Direct, main-thread claim mutations delegated to GriefPrevention's own datastore/API. */
 public final class ClaimActionService {
     public enum Direction { NORTH, SOUTH, EAST, WEST }
+    public record CreatePreview(int side, long requiredBlocks, int availableBlocks, boolean possible) {}
     public record ResizePreview(int offset, int maxExpand, int maxShrink, int width, int length, int blockDelta, boolean valid) {}
 
     private final PlexonGPFlags plugin;
@@ -29,14 +30,26 @@ public final class ClaimActionService {
         this.claims = claims;
     }
 
-    public Claim createSquare(Player player, int requestedSide) {
+    /** Authoritative creation preview used by the GUI; creation uses the same calculation. */
+    public CreatePreview previewCreate(Player player, int requestedSide) {
         int min = GriefPrevention.instance.config_claims_minWidth;
         int side = Math.max(min, requestedSide);
         long needed = (long) side * side;
-        if (needed > Integer.MAX_VALUE || claims.remainingClaimBlocks(player) < needed) {
+        int available = Math.max(0, claims.remainingClaimBlocks(player));
+        return new CreatePreview(side, needed, available, needed <= Integer.MAX_VALUE && needed <= available);
+    }
+
+    public int maximumAffordableSquareSide(Player player) {
+        return (int) Math.floor(Math.sqrt(Math.max(0, claims.remainingClaimBlocks(player))));
+    }
+
+    public Claim createSquare(Player player, int requestedSide) {
+        CreatePreview preview = previewCreate(player, requestedSide);
+        if (!preview.possible()) {
             plugin.messages().send(player, "claim-create-failed");
             return null;
         }
+        int side = preview.side();
         Location center = player.getLocation();
         int x1 = center.getBlockX() - side / 2;
         int z1 = center.getBlockZ() - side / 2;
@@ -49,7 +62,7 @@ public final class ClaimActionService {
             return null;
         }
         plugin.messages().send(player, "claim-created", Map.of(
-                "size", Integer.toString(side), "blocks", Long.toString(needed)));
+                "size", Integer.toString(side), "blocks", Long.toString(preview.requiredBlocks())));
         return result.claim;
     }
 
@@ -130,11 +143,15 @@ public final class ClaimActionService {
     }
 
     public void removeTrust(Player actor, Claim claim, String entry) {
+        removeTrust(actor, claim, entry, entry);
+    }
+
+    public void removeTrust(Player actor, Claim claim, String entry, String displayName) {
         Claim current = claims.byId(claims.safeId(claim));
         if (current == null || !claims.canManage(actor, current)) return;
         current.dropPermission(entry);
         GriefPrevention.instance.dataStore.saveClaim(current);
-        plugin.messages().send(actor, "trust-removed", Map.of("player", entry));
+        plugin.messages().send(actor, "trust-removed", Map.of("player", displayName));
     }
 
     public boolean delete(Player actor, Claim claim) {
