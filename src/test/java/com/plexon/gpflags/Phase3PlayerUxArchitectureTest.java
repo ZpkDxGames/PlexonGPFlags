@@ -187,10 +187,11 @@ class Phase3PlayerUxArchitectureTest {
         assertTrue(plugin.contains("net.plexon.claimflags.api.PlexonClaimFlagsAPI.class"));
     }
 
-    @Test void phase3WorkflowRunsForExactHeadAndPhase2BasedDraftPr() throws Exception {
+    @Test void stableWorkflowRunsForClosureAndExactMainPr() throws Exception {
         String workflow = text(".github/workflows/build.yml");
         assertTrue(workflow.contains("'phase3/**'"));
-        assertTrue(workflow.contains("branches: [main, 'phase2/**']"));
+        assertTrue(workflow.contains("'closure/**'"));
+        assertTrue(workflow.contains("pull_request:\n    branches: [main]"));
         assertTrue(workflow.contains("java-version: '25'"));
         assertTrue(workflow.contains("gradle clean check javadoc"));
     }
